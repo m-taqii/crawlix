@@ -6,12 +6,18 @@ export class Director {
     private llm: LLM;
     private goal: string;
 
+
     constructor(persona: PersonaConfig, llm: LLM, goal: string) {
         this.persona = persona;
         this.llm = llm;
         this.goal = goal;
     }
 
+    get personaName(): string {
+        return this.persona.name;
+    }
+
+    // build system prompt
     private buildSystemPrompt(): string {
         return `You are an autonomous QA agent embodying the following user persona.
 
@@ -46,12 +52,14 @@ Set "type" to "done" only when goal is fully complete.
 Set "type" to "stuck" only after ${this.persona.patience <= 3 ? '2' : this.persona.patience <= 6 ? '3' : '4'} failed attempts on the same step.`
     }
 
+    // build user message with history and page Elementa
     private buildUserMessage(pageState: PageState, history: HistoryEntry[]): string {
         const header = [
             pageState.url ? `Current URL: ${pageState.url}` : null,
             pageState.title ? `Current Title: ${pageState.title}` : null,
         ].filter(Boolean).join('\n')
 
+        // build history text to pass to the LLM in user message
         const historyText = history.length === 0
             ? 'No actions yet — this is your first step.'
             : history.slice(-10).map(e =>
@@ -77,6 +85,7 @@ Set "type" to "stuck" only after ${this.persona.patience <= 3 ? '2' : this.perso
         ].join('\n')
     }
 
+    // parse LLM response for next action
     private parseAction(raw: string): Action {
         const cleaned = raw
             .replace(/^```(?:json)?\n?/m, '')
@@ -100,6 +109,7 @@ Set "type" to "stuck" only after ${this.persona.patience <= 3 ? '2' : this.perso
         return parsed as unknown as Action
     }
 
+    // call LLM for Next Action
     public async decide(pageState: PageState, history: HistoryEntry[]): Promise<Action> {
         const input: LLMInput = {
             system: this.buildSystemPrompt(),

@@ -1,21 +1,26 @@
-//  Gremlin — Types
+//  Qlaw — Types
 
 // Actions 
 export type ActionType = | 'open' | 'click' | 'type' | 'scroll' | 'select' | 'hover' | 'press' | 'wait' | 'done' | 'stuck'
 
 export interface Action {
   type: ActionType
-  target?: string   // element description e.g. "Submit button"
+  target?: string    // element description e.g. "Submit button"
   value?: string   // text to type, url, key to press, scroll direction
   reasoning: string   // why this action — one sentence
   finding?: Finding  // bug or issue spotted at this step
+}
+
+export interface ActionResult {
+  success: boolean
+  error?:  string
 }
 
 // Findings 
 export interface Finding {
   severity: 'critical' | 'warning' | 'info'
   description: string
-  element?: string
+  element?: string | undefined
   screenshot?: string  // path - attached by runner
   step?: number
 }
@@ -72,8 +77,8 @@ export interface LLMOutput {
   model: string
 }
 
-// Gremlin Config (saved at ~/.gremlin/gremlin.config.json) 
-export interface GremlinConfig {
+// Qlaw Config (saved at ~/.qlaw/qlaw.config.json) 
+export interface QlawConfig {
   primary: ProviderConfig
   fallback?: ProviderConfig
 }
