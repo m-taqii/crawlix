@@ -28,7 +28,7 @@ export interface Finding {
 // Page State 
 export interface PageState {
   url?: string   // undefined for native apps
-  title?: string
+  title?: string | undefined
   tree: string   // extracted UI elements as text
   timestamp: number
 }
