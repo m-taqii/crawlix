@@ -3,6 +3,7 @@ import { Orchestrator } from '../../core/orchestrator.js';
 import { LLM } from '../../llm/index.js';
 import { loadPersonas } from '../../personas/loader.js';
 import { getConfig } from '../../lib/getConfigs.js';
+import { agentDone, agentStarted, printFinding, printHeader, printSummary } from '../../lib/display.js'
 
 export const runCommand = new Command('run')
     .description('Run AI agents against your app')
@@ -17,14 +18,24 @@ export const runCommand = new Command('run')
         const llm: LLM = new LLM(config.primary, config.fallback);
 
         const { url, goal, agent, steps, concurrency, headed } = options;
+        
+        const personas = await loadPersonas(agent);
+        printHeader(url, goal, personas.map(p => p.name));
+
         const orchestrator = new Orchestrator({
             url,
             goal,
             llm,
-            personas: await loadPersonas(agent),
+            personas,
             maxSteps: parseInt(steps),
             concurrency: parseInt(concurrency),
-            headless: !headed
+            headless: !headed,
+            onAgentStart: (name) => agentStarted(name),
+            onAgentDone: (result) => {
+                agentDone(result)
+                result.findings.forEach(f => printFinding(f, result.persona))
+            }
         });
-        await orchestrator.run();
+        const results = await orchestrator.run();
+        printSummary(results);
     })

@@ -13,6 +13,8 @@ export interface OrchestratorConfig {
     maxSteps?: number
     concurrency?: number
     headless?: boolean
+    onAgentStart?: (personaName: string) => void
+    onAgentDone?: (result: RunResult) => void
 }
 
 export class Orchestrator {
@@ -23,6 +25,8 @@ export class Orchestrator {
     private maxSteps: number;
     private concurrency: number;
     private headless: boolean;
+    private onAgentStart?: ((personaName: string) => void) | undefined;
+    private onAgentDone?: ((result: RunResult) => void) | undefined;
 
     constructor(config: OrchestratorConfig) {
         this.url = config.url;
@@ -31,7 +35,9 @@ export class Orchestrator {
         this.personas = config.personas;
         this.maxSteps = config.maxSteps || 10;
         this.concurrency = config.concurrency || 2;
-        this.headless = config.headless || true;
+        this.headless = config.headless ?? true;
+        this.onAgentStart = config.onAgentStart;
+        this.onAgentDone = config.onAgentDone;
     }
 
     async run(): Promise<RunResult[]> {
@@ -44,6 +50,7 @@ export class Orchestrator {
 
                 const results = await Promise.all(
                     batch.map(async persona => {
+                        this.onAgentStart?.(persona.name)
                         const context = await browser.newContext()
                         const page = await context.newPage()
 
@@ -51,10 +58,12 @@ export class Orchestrator {
                             const adapter = new WebAdapter(page)
                             const director = new Director(persona, this.llm, this.goal)
                             const runner = new Runner(adapter, director, this.url, this.goal, this.maxSteps)
-                            return await runner.run()
+                            const result = await runner.run()
+                            this.onAgentDone?.(result)
+                            return result
                         } finally {
                             await page.close()
-                            await context.close()  
+                            await context.close()
                         }
                     })
                 )

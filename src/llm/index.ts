@@ -81,7 +81,7 @@ export class LLM {
         if (client instanceof Anthropic) {
             const res = await client.messages.create({
                 model,
-                max_tokens: 1024,
+                max_tokens: 2048,
                 system: [{
                     type: 'text',
                     text: input.system,
@@ -109,7 +109,8 @@ export class LLM {
         const res = await (client as OpenAI).chat.completions.create({
             model,
             temperature: 0.2,
-            max_tokens: 1024,
+            max_tokens: 2048,
+            response_format: { type: 'json_object' },
             messages: [
                 { role: 'system', content: input.system },
                 ...input.messages.map(m => ({

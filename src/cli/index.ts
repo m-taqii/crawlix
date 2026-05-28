@@ -9,7 +9,7 @@ const program = new Command()
 
 program
     .name('qlaw')
-    .description('👾 AI agents that claw through your app before users do')
+    .description('👾 Qlaw: Claw through bugs before your users do.')
     .version(pkg.version)
 
 program.addCommand(runCommand)
