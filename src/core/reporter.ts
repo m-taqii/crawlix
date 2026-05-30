@@ -9,7 +9,7 @@ Your job is to turn raw test findings into a clear, actionable markdown report t
 
 REPORT STRUCTURE — follow this exactly:
 
-# Qlaw Report
+# Crawlix Report
 
 ## Overview
 - URL tested
@@ -126,13 +126,13 @@ export async function generateReport(
         const parsed = JSON.parse(cleaned) as { title: string; report: string }
         return parsed
     } catch {
-        return { title: 'qlaw-report', report: output.content }
+        return { title: 'crawlix-report', report: output.content }
     }
 }
 
-// saves report to ./qlaw-reports/
+// saves report to ./crawlix-reports/
 export function saveReport(title: string, content: string): string {
-    const reportsDir = path.join(process.cwd(), 'qlaw-reports')
+    const reportsDir = path.join(process.cwd(), 'crawlix-reports')
 
     if (!fs.existsSync(reportsDir)) {
         fs.mkdirSync(reportsDir, { recursive: true })

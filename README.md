@@ -1,17 +1,17 @@
-# 👾 Qlaw
+# 👾 Crawlix
 
 > Claw through bugs before your users do.
 
-Qlaw is an open-source autonomous QA agent that spawns AI-powered user personas and unleashes them on your product. Each persona navigates independently, makes real decisions, hits dead ends, and finds bugs - without you writing a single test script.
+Crawlix is an open-source autonomous QA agent that spawns AI-powered user personas and unleashes them on your product. Each persona navigates independently, makes real decisions, hits dead ends, and finds bugs - without you writing a single test script.
 
 ---
 
 ## How it works
 
-Qlaw spawns multiple AI agents simultaneously. Each one opens your app in a real browser, reads the UI, and navigates toward the goal exactly as that type of user would behave - including their mistakes, impatience, and confusion. When they find something broken, confusing, or unexpected - they report it.
+Crawlix spawns multiple AI agents simultaneously. Each one opens your app in a real browser, reads the UI, and navigates toward the goal exactly as that type of user would behave - including their mistakes, impatience, and confusion. When they find something broken, confusing, or unexpected - they report it.
 
 ```
-  👾 Qlaw - Claw through bugs before your users do.
+  👾 Crawlix - Claw through bugs before your users do.
 
   target   → http://localhost:3000/
   goal     → Check the landing page is everything working fine
@@ -25,7 +25,7 @@ Qlaw spawns multiple AI agents simultaneously. Each one opens your app in a real
   ~ Slow Network      no findings                4 steps  · 27.7s
 
   ╭──────────────────────────────────────╮
-  │ 👾 Qlaw - run complete               │
+  │ 👾 Crawlix - run complete               │
   │                                      │
   │   1 critical  106 warnings  1 info   │
   │                                      │
@@ -42,17 +42,17 @@ No test scripts. No selectors. No maintenance.
 ## Install
 
 ```bash
-npm install -g qlaw
+npm install -g crawlix
 ```
 
 ---
 
 ## Setup
 
-Run once. Qlaw asks for your LLM provider and API key - remembers it forever.
+Run once. Crawlix asks for your LLM provider and API key - remembers it forever.
 
 ```bash
-qlaw setup
+crawlix setup
 ```
 
 Supported providers:
@@ -66,7 +66,7 @@ Supported providers:
 - OpenAI
 - Anthropic
 
-Config is saved to `~/.qlaw/qlaw.config.json`.
+Config is saved to `~/.crawlix/crawlix.config.json`.
 
 ---
 
@@ -74,19 +74,19 @@ Config is saved to `~/.qlaw/qlaw.config.json`.
 
 ```bash
 # run all agents against your app
-qlaw run --url https://myapp.com --goal "complete the signup flow"
+crawlix run --url https://myapp.com --goal "complete the signup flow"
 
 # run specific agents only
-qlaw run --url https://myapp.com --goal "login" --agent first-timer,adversarial
+crawlix run --url https://myapp.com --goal "login" --agent first-timer,adversarial
 
 # run headed - watch agents navigate in real browser
-qlaw run --url https://myapp.com --goal "checkout" --headed
+crawlix run --url https://myapp.com --goal "checkout" --headed
 
 # control steps and concurrency
-qlaw run --url https://myapp.com --goal "find pricing" --steps 15 --concurrency 1
+crawlix run --url https://myapp.com --goal "find pricing" --steps 15 --concurrency 1
 
 # list all available agents
-qlaw agents
+crawlix agents
 ```
 
 ---
@@ -106,7 +106,7 @@ qlaw agents
 
 ## Custom agents
 
-Drop a JSON file into `.qlaw/agents/` in your project root:
+Drop a JSON file into `.crawlix/agents/` in your project root:
 
 ```json
 {
@@ -119,19 +119,19 @@ Drop a JSON file into `.qlaw/agents/` in your project root:
 }
 ```
 
-Qlaw picks it up automatically on the next run. No code, no imports, no build step.
+Crawlix picks it up automatically on the next run. No code, no imports, no build step.
 
 Run a specific custom agent:
 
 ```bash
-qlaw run --url https://myapp.com --goal "book an appointment" --agent doctor
+crawlix run --url https://myapp.com --goal "book an appointment" --agent doctor
 ```
 
 ---
 
 ## Findings
 
-Qlaw reports three severity levels:
+Crawlix reports three severity levels:
 
 | Severity | Meaning |
 |---|---|
@@ -145,7 +145,7 @@ Qlaw reports three severity levels:
 
 Traditional QA tools require you to write and maintain selectors, flows, and assertions. They break when your UI changes. They only test paths you already thought of.
 
-Qlaw doesn't know your app. That's the point. It finds the paths you didn't think of - the ones your real users will find on their own.
+Crawlix doesn't know your app. That's the point. It finds the paths you didn't think of - the ones your real users will find on their own.
 
 ---
 
@@ -156,8 +156,8 @@ Contributions are welcome - bug fixes, new agents, adapter improvements, or anyt
 ### Getting started
 
 ```bash
-git clone https://github.com/m-taqii/qlaw
-cd qlaw
+git clone https://github.com/m-taqii/crawlix
+cd crawlix
 pnpm install
 pnpm tsx src/cli/index.ts run --url https://example.com --goal "find the more information link"
 ```

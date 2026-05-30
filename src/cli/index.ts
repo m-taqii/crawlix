@@ -8,8 +8,8 @@ const pkg = require('../../package.json') as { version: string }
 const program = new Command()
 
 program
-    .name('qlaw')
-    .description('👾 Qlaw: Claw through bugs before your users do.')
+    .name('crawlix')
+    .description('👾 Crawlix: Claw through bugs before your users do.')
     .version(pkg.version)
 
 program.addCommand(runCommand)

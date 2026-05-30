@@ -21,7 +21,7 @@ export const runCommand = new Command('run')
     .action(async (options) => {
         const config = getConfig();
         if (options.roundRobin && !config.roundRobin?.length) {
-            console.warn(chalk.yellow('  ⚠ --round-robin flag used but no round robin providers configured. Run qlaw setup to add them.'))
+            console.warn(chalk.yellow('  ⚠ --round-robin flag used but no round robin providers configured. Run crawlix setup to add them.'))
         }
         const llm: LLM = new LLM(config.primary, config.fallback, options.roundRobin ? config.roundRobin : undefined);
 

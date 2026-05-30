@@ -1,4 +1,4 @@
-//  Qlaw — Types
+//  Crawlix — Types
 
 // Actions 
 export type ActionType = | 'open' | 'click' | 'type' | 'scroll' | 'select' | 'hover' | 'press' | 'wait' | 'done' | 'stuck'
@@ -77,8 +77,8 @@ export interface LLMOutput {
   model: string
 }
 
-// Qlaw Config (saved at ~/.qlaw/qlaw.config.json) 
-export interface QlawConfig {
+// Crawlix Config (saved at ~/.crawlix/crawlix.config.json) 
+export interface CrawlixConfig {
   primary: ProviderConfig
   fallback?: ProviderConfig
   roundRobin?: ProviderConfig[]

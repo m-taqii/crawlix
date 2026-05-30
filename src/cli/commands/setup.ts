@@ -3,7 +3,7 @@ import { select, input, password, confirm } from '@inquirer/prompts'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
-import type { ProviderConfig, ProviderName, QlawConfig } from '../../types/index.js'
+import type { ProviderConfig, ProviderName, CrawlixConfig } from '../../types/index.js'
 
 const DEFAULT_MODELS: Record<ProviderName, string> = {
     groq: 'llama-3.3-70b-versatile',
@@ -59,7 +59,7 @@ async function setupProvider(label: string): Promise<ProviderConfig> {
 export const setupCommand = new Command('setup')
     .description('Configure your LLM provider')
     .action(async () => {
-        console.log('\n  👾 qlaw setup\n')
+        console.log('\n  👾 crawlix setup\n')
 
         const primary = await setupProvider('primary')
 
@@ -93,19 +93,19 @@ export const setupCommand = new Command('setup')
         }
 
         // build config
-        const qlawConfig: QlawConfig = {
+        const crawlixConfig: CrawlixConfig = {
             primary,
             ...(fallback && { fallback }),
             ...(roundRobin.length > 0 && { roundRobin }),
         }
 
-        // save to ~/.qlaw/qlaw.config.json
-        const configDir = path.join(os.homedir(), '.qlaw')
-        const configPath = path.join(configDir, 'qlaw.config.json')
+        // save to ~/.crawlix/crawlix.config.json
+        const configDir = path.join(os.homedir(), '.crawlix')
+        const configPath = path.join(configDir, 'crawlix.config.json')
 
         fs.mkdirSync(configDir, { recursive: true })
-        fs.writeFileSync(configPath, JSON.stringify(qlawConfig, null, 2))
+        fs.writeFileSync(configPath, JSON.stringify(crawlixConfig, null, 2))
 
         console.log('\n  ✓ Config saved to', configPath)
-        console.log('  Run qlaw run --url <url> --goal "<goal>" to start testing\n')
+        console.log('  Run crawlix run --url <url> --goal "<goal>" to start testing\n')
     })

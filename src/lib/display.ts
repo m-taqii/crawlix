@@ -67,7 +67,7 @@ export function printSummary(results: RunResult[]): void {
   const totalTime   = results.reduce((acc, r) => acc + r.duration, 0)
 
   const lines = [
-    chalk.bold.white('👾 Qlaw — run complete'),
+    chalk.bold.white('👾 Crawlix — run complete'),
     '',
     `  ${chalk.red(`${critical} critical`)}  ${chalk.yellow(`${warnings} warnings`)}  ${chalk.gray(`${info} info`)}`,
     '',
@@ -85,7 +85,7 @@ export function printSummary(results: RunResult[]): void {
 }
 
 export function printHeader(url: string, goal: string, personas: string[]): void {
-  console.log('\n' + chalk.bold.white('  👾 Qlaw - Claw through bugs before your users do.'))
+  console.log('\n' + chalk.bold.white('  👾 Crawlix - Claw through bugs before your users do.'))
   console.log(chalk.gray(`  target   → `) + chalk.white(url))
   console.log(chalk.gray(`  goal     → `) + chalk.white(goal))
   console.log(chalk.gray(`  agents   → `) + chalk.white(personas.join(', ')))
