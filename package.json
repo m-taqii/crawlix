@@ -2,7 +2,10 @@
   "name": "qlaw",
   "version": "0.1.0",
   "description": "AI testers that think like users. Your users will break it anyway. Qlaw finds it first.",
-  "main": "index.js",
+  "main": "./dist/cli/index.js",
+  "exports": {
+    ".": "./dist/cli/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx src/cli/index.ts",
@@ -12,10 +15,11 @@
   "keywords": [
     "ai",
     "testing",
+    "qa",
     "automation",
     "playwright",
-    "openai",
-    "anthropic"
+    "agents",
+    "llm"
   ],
   "author": "Muhammad Taqi",
   "license": "MIT",
@@ -31,7 +35,9 @@
     "qlaw": "./dist/cli/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "dependencies": {
     "@anthropic-ai/sdk": "^0.98.0",

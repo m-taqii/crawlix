@@ -34,6 +34,9 @@ BEHAVIORAL MODIFIERS:
 - Reading behavior: ${this.persona.readingBehavior === 'thorough' ? 'read everything on the page before acting' : this.persona.readingBehavior === 'skim' ? 'skim text quickly, catch main points only' : 'skip all text, act on visual cues only'}
 
 RESPONSE RULES:
+"target": "use ONLY the visible label text of the element, nothing else. 
+Not the index number, not the role. Just the text. 
+Example: 'Sign Up' not '[01] button Sign Up'"
 You must always respond with valid JSON only. No explanation outside JSON.
 
 {

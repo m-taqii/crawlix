@@ -21,21 +21,27 @@ export class WebAdapter implements Adapter {
     }
 
     private async resolve(target: string) {
-        const strategies = [
-            () => this.page.getByRole('button', { name: target, exact: false }).first(),
-            () => this.page.getByRole('link', { name: target, exact: false }).first(),
-            () => this.page.getByRole('textbox', { name: target, exact: false }).first(),
-            () => this.page.getByRole('combobox', { name: target, exact: false }).first(),
-            () => this.page.getByRole('checkbox', { name: target, exact: false }).first(),
-            () => this.page.getByLabel(target, { exact: false }).first(),
-            () => this.page.getByPlaceholder(target, { exact: false }).first(),
-            () => this.page.getByText(target, { exact: false }).first(),
-        ]
+        const cleaned = target
+            .replace(/^\w+:\s*/, '')   // remove 'link: ' or 'button: ' prefix
+            .replace(/^"|"$/g, '')     // remove surrounding quotes
+            .trim()
 
+        const strategies = [
+            () => this.page.getByRole('button', { name: cleaned, exact: false }).first(),
+            () => this.page.getByRole('link', { name: cleaned, exact: false }).first(),
+            () => this.page.getByRole('textbox', { name: cleaned, exact: false }).first(),
+            () => this.page.getByRole('combobox', { name: cleaned, exact: false }).first(),
+            () => this.page.getByRole('checkbox', { name: cleaned, exact: false }).first(),
+            () => this.page.getByLabel(cleaned, { exact: false }).first(),
+            () => this.page.getByPlaceholder(cleaned, { exact: false }).first(),
+            () => this.page.getByText(cleaned, { exact: false }).first(),
+        ]
         for (const strategy of strategies) {
             try {
                 const el = strategy()
-                if (await el.isVisible().catch(() => false)) return el
+                if (await el.isVisible().catch(() => false)) {
+                    return el
+                }
             } catch {
 
             }

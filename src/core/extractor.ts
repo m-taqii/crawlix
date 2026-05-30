@@ -3,7 +3,7 @@ import type { PageState } from '../types/index.js'
 
 export class Extractor {
   async extract(page: Page): Promise<PageState> {
-    const url   = page.url()
+    const url = page.url()
     const title = await page.title().catch(() => undefined)
 
     // runs inside the browser - queries DOM directly
@@ -23,8 +23,8 @@ export class Extractor {
         })
         .slice(0, 60)  // cap at 60
         .map((el, i) => {
-          const tag   = el.tagName.toLowerCase()
-          const role  = el.getAttribute('role') ?? tag
+          const tag = el.tagName.toLowerCase()
+          const role = el.getAttribute('role') ?? (tag === 'a' ? 'link' : tag === 'button' ? 'button' : tag)
           const label = (
             el.getAttribute('aria-label') ??
             el.getAttribute('placeholder') ??
@@ -35,7 +35,7 @@ export class Extractor {
           const type = el.getAttribute('type') ?? ''
           const name = el.getAttribute('name') ?? ''
 
-          return `[${String(i + 1).padStart(2, '0')}] ${role.padEnd(12)} ${label}${type ? ` (${type})` : ''}${name ? ` name="${name}"` : ''}`
+          return `[${String(i + 1).padStart(2, '0')}] ${role}: "${label}"${type ? ` (${type})` : ''}${name ? ` name="${name}"` : ''}`
         })
         .join('\n')
     })
@@ -43,7 +43,7 @@ export class Extractor {
     return {
       url,
       title,
-      tree:      tree || '(no interactive elements found)',
+      tree: tree || '(no interactive elements found)',
       timestamp: Date.now(),
     }
   }
