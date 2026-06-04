@@ -153,7 +153,7 @@ export class LLM {
         // OpenAI-compatible (Groq, Gemini, etc.)
         const res = await (client as OpenAI).chat.completions.create({
             model,
-            temperature: 0.2,
+            temperature: 0.4,
             max_tokens: 2048,
             response_format: { type: 'json_object' },
             messages: [

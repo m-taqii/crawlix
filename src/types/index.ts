@@ -38,6 +38,8 @@ export interface HistoryEntry {
   step: number
   pageState: PageState
   action: Action
+  succeeded: boolean
+  error?: string | undefined
 }
 
 // User Persona for Ai Tester

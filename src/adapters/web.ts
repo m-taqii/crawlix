@@ -22,7 +22,8 @@ export class WebAdapter implements Adapter {
 
     private async resolve(target: string) {
         const cleaned = target
-            .replace(/^\w+:\s*/, '')   // remove 'link: ' or 'button: ' prefix
+            .replace(/^\[\d+\]\s*/, '') // remove '[01]' if it hallucinates index
+            .replace(/^(button|link|input|checkbox|radio|select|textbox|combobox)\s*:?\s*/i, '') // remove roles with or without colons
             .replace(/^"|"$/g, '')     // remove surrounding quotes
             .trim()
 
@@ -60,7 +61,8 @@ export class WebAdapter implements Adapter {
                     if (!el) return { success: false, error: `Element not found: "${action.target}"` }
                     await el.click({ timeout: 5000 })
                     // wait for page to settle after click
-                    await this.page.waitForLoadState('domcontentloaded', { timeout: 5000 }).catch(() => { })
+                    await this.page.waitForLoadState('networkidle', { timeout: 3000 }).catch(() => { })
+                    await this.page.waitForTimeout(500)
                     break
                 }
 
@@ -107,7 +109,9 @@ export class WebAdapter implements Adapter {
                 }
 
                 case 'open': {
-                    await this.page.goto(action.value ?? '', { waitUntil: 'domcontentloaded', timeout: 15000 })
+                    // LLM might return a relative path like '/get-started', so we resolve it against the current URL
+                    const targetUrl = new URL(action.value ?? '', this.page.url()).href
+                    await this.page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 15000 })
                     break
                 }
 

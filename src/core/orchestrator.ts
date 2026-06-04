@@ -33,7 +33,7 @@ export class Orchestrator {
         this.goal = config.goal;
         this.llm = config.llm;
         this.personas = config.personas;
-        this.maxSteps = config.maxSteps || 10;
+        this.maxSteps = config.maxSteps || 100;
         this.concurrency = config.concurrency || 2;
         this.headless = config.headless ?? true;
         this.onAgentStart = config.onAgentStart;

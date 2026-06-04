@@ -15,13 +15,21 @@ export class Extractor {
         '[tabindex]:not([tabindex="-1"])',
       ].join(', ')
 
+      const vh = window.innerHeight
       return Array.from(document.querySelectorAll(selector))
         .filter(el => {
-          // visible only
           const rect = el.getBoundingClientRect()
           return rect.width > 0 && rect.height > 0
         })
-        .slice(0, 60)  // cap at 60
+        // sort: elements in/near viewport first, then the rest
+        .sort((a, b) => {
+          const aY = a.getBoundingClientRect().top
+          const bY = b.getBoundingClientRect().top
+          const aInView = aY >= -100 && aY <= vh + 100 ? 0 : 1
+          const bInView = bY >= -100 && bY <= vh + 100 ? 0 : 1
+          return aInView - bInView || aY - bY
+        })
+        .slice(0, 80)
         .map((el, i) => {
           const tag = el.tagName.toLowerCase()
           const role = el.getAttribute('role') ?? (tag === 'a' ? 'link' : tag === 'button' ? 'button' : tag)

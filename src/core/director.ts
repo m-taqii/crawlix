@@ -37,6 +37,8 @@ RESPONSE RULES:
 "target": "use ONLY the visible label text of the element, nothing else. 
 Not the index number, not the role. Just the text. 
 Example: 'Sign Up' not '[01] button Sign Up'"
+"data entry": "When filling out forms, always use 'crawlix@gmail.com' for emails, 'crawlix' for names, and 'password123' for passwords."
+"account state": "If you already registered, DO NOT try to register again. If you end up logged out, find the 'Log In' button and log in with those same credentials instead."
 You must always respond with valid JSON only. No explanation outside JSON.
 
 {
@@ -63,16 +65,19 @@ Set "type" to "stuck" only after ${this.persona.patience <= 3 ? '2' : this.perso
             pageState.title ? `Current Title: ${pageState.title}` : null,
         ].filter(Boolean).join('\n')
 
-        // build history text to pass to the LLM in user message
+        // build history text to pass to the LLM in user message ( last 5 entries )
         const historyText = history.length === 0
             ? 'No actions yet — this is your first step.'
-            : history.slice(-10).map(e =>
-                `[${String(e.step).padStart(2, '0')}] ${e.action.type.toUpperCase().padEnd(8)} ` +
-                `${e.action.target ?? '—'} ` +
-                `${e.action.value ? `"${e.action.value}"` : ''} ` +
-                `→ ${e.action.reasoning}` +
-                (e.action.finding ? ` ⚠ ${e.action.finding.severity.toUpperCase()}: ${e.action.finding.description}` : '')
-            ).join('\n')
+            : history.slice(-5).map(e => {
+                const status = e.succeeded ? '✓' : `✗ FAILED: ${e.error}`
+                return (
+                    `[${String(e.step).padStart(2, '0')}] ${e.action.type.toUpperCase().padEnd(8)} ` +
+                    `${e.action.target ?? '—'} ` +
+                    `${e.action.value ? `"${e.action.value}"` : ''} ` +
+                    `→ ${status}` + `\n` + `Reasoning: ${e.action.reasoning}` + `\n` +
+                    (e.action.finding ? ` ⚠ ${e.action.finding.severity.toUpperCase()}: ${e.action.finding.description}` : '')
+                )
+            }).join('\n')
         const lastAction = history.at(-1)
         const lastActionHint = lastAction?.action.type === 'type'
             ? `\nHINT: You just typed "${lastAction.action.value}" into "${lastAction.action.target}" — you must now submit by pressing Enter or clicking the submit/search button.`

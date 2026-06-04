@@ -43,14 +43,14 @@ export class Runner {
       // execute the action
       const result = await this.adapter.execute(action)
 
-      // record in history
-      history.push({ step, pageState, action })
+      // record in history with execution result
+      history.push({ step, pageState, action, succeeded: result.success, error: result.error })
 
-      // if action failed record it
+      // if action failed record it as a finding too
       if (!result.success) {
         findings.push({
           severity:    'warning',
-          description: `Action failed: ${result.error}`,
+          description: `Action failed: ${result.error ?? 'Unknown error'}`,
           element:     action.target ?? undefined,
           step,
         })
