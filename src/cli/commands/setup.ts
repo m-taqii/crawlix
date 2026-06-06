@@ -5,7 +5,7 @@ import os from 'os'
 import path from 'path'
 import type { ProviderConfig, ProviderName, CrawlixConfig } from '../../types/index.js'
 
-const DEFAULT_MODELS: Record<ProviderName, string> = {
+const DEFAULT_MODELS: Partial<Record<ProviderName, string>> = {
     groq: 'llama-3.3-70b-versatile',
     openai: 'gpt-4o-mini',
     gemini: 'gemini-2.5-flash',
@@ -28,8 +28,17 @@ async function setupProvider(label: string): Promise<ProviderConfig> {
             { name: 'Ollama', value: 'ollama' },
             { name: 'OpenAI', value: 'openai' },
             { name: 'Anthropic', value: 'anthropic' },
+            { name: 'Custom (OpenAI Compatible)', value: 'custom' },
         ]
     })
+
+    let baseURL: string | undefined
+    if (provider === 'custom') {
+        baseURL = await input({
+            message: 'Enter the base URL for the custom provider (e.g. https://api.together.xyz/v1):',
+            validate: v => v.trim().length > 0 ? true : 'Base URL cannot be empty'
+        })
+    }
 
     let apiKey: string | undefined
 
@@ -38,18 +47,22 @@ async function setupProvider(label: string): Promise<ProviderConfig> {
     } else {
         apiKey = await password({
             message: `Enter your ${provider} API key:`,
-            validate: v => v.trim().length > 0 ? true : 'API key cannot be empty'
+            validate: v => (provider === 'custom' || v.trim().length > 0) ? true : 'API key cannot be empty'
         })
     }
 
-    const defaultModel: string = DEFAULT_MODELS[provider]
+    const defaultModel: string | undefined = DEFAULT_MODELS[provider]
     const customModel: string = await input({
-        message: `Model to use (press enter for default: ${defaultModel}):`,
+        message: defaultModel 
+            ? `Model to use (press enter for default: ${defaultModel}):` 
+            : `Model to use:`,
+        validate: v => (defaultModel || v.trim().length > 0) ? true : 'Model cannot be empty for custom providers'
     })
 
     const config: ProviderConfig = {
         provider,
-        ...(apiKey && { apiKey }),
+        ...(apiKey && apiKey.trim().length > 0 && { apiKey: apiKey.trim() }),
+        ...(baseURL && { baseURL: baseURL.trim() }),
         ...(customModel.trim().length > 0 && { model: customModel.trim() }),
     }
 

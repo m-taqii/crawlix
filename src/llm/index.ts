@@ -12,7 +12,7 @@ const BASE_URLS: Partial<Record<ProviderName, string>> = {
     mistral: 'https://api.mistral.ai/v1',
 }
 
-const DEFAULT_MODELS: Record<ProviderName, string> = {
+const DEFAULT_MODELS: Partial<Record<ProviderName, string>> = {
     groq: 'llama-3.3-70b-versatile',
     openai: 'gpt-4o-mini',
     gemini: 'gemini-2.5-flash',
@@ -120,7 +120,7 @@ export class LLM {
         config: ProviderConfig,
         input: LLMInput
     ): Promise<LLMOutput> {
-        const model = config.model ?? DEFAULT_MODELS[config.provider]
+        const model = config.model ?? DEFAULT_MODELS[config.provider] ?? 'unknown-model'
 
         // Anthropic 
         if (client instanceof Anthropic) {

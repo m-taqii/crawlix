@@ -53,8 +53,7 @@ export interface PersonaConfig {
   maxSteps?: number   // optional override, derived from patience if not set
 }
 
-// LLM Provider Config
-export type ProviderName = | 'groq' | 'openai' | 'anthropic' | 'gemini' | 'openrouter' | 'ollama' | 'cerebras' | 'mistral';
+export type ProviderName = | 'groq' | 'openai' | 'anthropic' | 'gemini' | 'openrouter' | 'ollama' | 'cerebras' | 'mistral' | 'custom';
 
 export interface ProviderConfig {
   provider: ProviderName
