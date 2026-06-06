@@ -1,15 +1,17 @@
-import type { Action, HistoryEntry, LLMInput, PageState, PersonaConfig } from "../types/index.js";
+import type { Action, CrawlixContext, HistoryEntry, LLMInput, PageState, PersonaConfig } from "../types/index.js";
 import { LLM } from "../llm/index.js";
+import { getContext } from "../lib/getContext.js";
 
 export class Director {
     private persona: PersonaConfig;
     private llm: LLM;
     private goal: string;
-
+    private context?: CrawlixContext | undefined;
 
     constructor(persona: PersonaConfig, llm: LLM, goal: string) {
         this.persona = persona;
         this.llm = llm;
+        this.context = getContext();
         this.goal = goal;
     }
 
@@ -17,9 +19,30 @@ export class Director {
         return this.persona.name;
     }
 
+    // build context block For Application Context
+    private buildContextBlock(): string {
+        const c = this.context;
+        if (!c) return '';
+        const lines = [
+            c.name && `Application: ${c.name}`,
+            c.description && `Description: ${c.description}`,
+            c.type && `Type: ${c.type}`,
+            c.stack && `Stack: ${c.stack}`,
+            c.environment && `Environment: ${c.environment}`,
+            c.entryPoints?.length && `Entry points: ${c.entryPoints.join(', ')}`,
+            c.authRequired !== undefined && `Auth required: ${c.authRequired}`,
+            c.flows?.length && `Known flows:\n${c.flows.map(f => `  - ${f}`).join('\n')}`,
+            c.offLimits?.length && `Off limits:\n${c.offLimits.map(o => `  - ${o}`).join('\n')}`,
+        ].filter(Boolean);
+        return `APPLICATION CONTEXT:\n${lines.join('\n')}\n`;
+    }
+
     // build system prompt
     private buildSystemPrompt(): string {
+
         return `You are an autonomous QA agent embodying the following user persona.
+
+${this.context ? this.buildContextBlock() : ''}
 
 PERSONA: ${this.persona.name}
 DESCRIPTION: ${this.persona.description}

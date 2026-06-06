@@ -97,3 +97,16 @@ export interface RunResult {
   duration: number      // ms
   history: HistoryEntry[]
 }
+
+// Types for context file
+export interface CrawlixContext {
+  name?: string
+  description?: string
+  type?: 'web' | 'api' | 'cli' | 'library' | 'mobile' | 'desktop'
+  entryPoints?: string[]
+  flows?: string[]
+  authRequired?: boolean
+  offLimits?: string[]
+  environment?: 'local' | 'staging' | 'production'
+  stack?: string
+}
