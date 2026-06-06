@@ -75,14 +75,48 @@ Supported providers:
 - Ollama 
 - OpenAI
 - Anthropic 
+- Custom (openai compatible providers)
 
 Config is saved to `~/.crawlix/crawlix.config.json`.
+
+---
+
+## Project Context
+
+You can provide Crawlix with context about your application so the agents can make smarter decisions.
+
+Run the init command to create a context file:
+
+```bash
+crawlix init
+```
+
+This generates a `.crawlix/context.jsonc` file in your project root:
+
+```jsonc
+{
+  "name": "My App",
+  "description": "A short description of your application",
+  "type": "web",
+  "entryPoints": ["http://localhost:3000"],
+  "flows": ["Describe a key user flow here", "Add more flows as needed"],
+  "authRequired": false,
+  "offLimits": ["Add anything agents should avoid here"],
+  "environment": "local",
+  "stack": "e.g. Next.js, Postgres"
+}
+```
+
+The agents will automatically read this file when running in your project.
 
 ---
 
 ## Usage
 
 ```bash
+# initialize a project context file
+crawlix init
+
 # run all agents against your app
 crawlix run --url https://myapp.com --goal "complete the signup flow"
 
@@ -183,34 +217,8 @@ Crawlix doesn't know your app. That's the point. It finds the paths you didn't t
 
 ## Contributing
 
-Contributions are welcome - bug fixes, new agents, adapter improvements, or anything that makes it better.
-
-### Getting started
-
-```bash
-git clone https://github.com/m-taqii/crawlix
-cd crawlix
-pnpm install
-pnpm tsx src/cli/index.ts run --url https://example.com --goal "find the more information link"
-```
-
-### Ways to contribute
-
-- **Add a built-in agent** - add a persona to `src/personas/index.ts` and open a PR
-- **Fix a bug** - open an issue first, then a PR with the fix
-- **Improve element resolution** - `src/adapters/web.ts` `resolve()` method always needs work
-- **Add an adapter** - API testing, mobile, desktop - see `src/adapters/base.ts` for the interface
-- **Improve the report** - `src/core/reporter.ts` - better prompts, better structure
-
-### Before opening a PR
-
-- Run `pnpm exec tsc --noEmit` - must be clean
-- Test against a real URL
-- Keep it focused - one thing per PR
-
-### Found a bug?
-
-Open an issue with the URL you were testing, the goal you gave, and the error output.
+Contributions are welcome - bug fixes, new agents, adapter improvements, or anything that makes it better. 
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to get started.
 
 ---
 
