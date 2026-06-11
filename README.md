@@ -215,6 +215,19 @@ Crawlix doesn't know your app. That's the point. It finds the paths you didn't t
 
 ---
 
+## Roadmap
+ 
+- [x] Web testing (Playwright)
+- [x] AI-generated reports
+- [x] Custom agents via JSON
+- [ ] API testing (no UI)
+- [ ] Mobile testing (Appium)
+- [ ] Desktop testing (Electron / WinAppDriver)
+- [ ] CI/CD integration (GitHub Actions)
+- [ ] HTML report export
+
+---
+
 ## Contributing
 
 Contributions are welcome - bug fixes, new agents, adapter improvements, or anything that makes it better. 
