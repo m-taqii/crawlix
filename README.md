@@ -85,26 +85,15 @@ Config is saved to `~/.crawlix/crawlix.config.json`.
 
 You can provide Crawlix with context about your application so the agents can make smarter decisions.
 
-Run the init command to create a context file:
+Simply create a `CONTEXT.md` file inside a `.crawlix` folder in your project root:
 
-```bash
-crawlix init
-```
+```markdown
+# My App Context
+This is a web app. The agents should test the main signup flow.
 
-This generates a `.crawlix/context.jsonc` file in your project root:
-
-```jsonc
-{
-  "name": "My App",
-  "description": "A short description of your application",
-  "type": "web",
-  "entryPoints": ["http://localhost:3000"],
-  "flows": ["Describe a key user flow here", "Add more flows as needed"],
-  "authRequired": false,
-  "offLimits": ["Add anything agents should avoid here"],
-  "environment": "local",
-  "stack": "e.g. Next.js, Postgres"
-}
+- Stack: Next.js, Postgres
+- Auth: Not required
+- Off-limits: Do not delete user data
 ```
 
 The agents will automatically read this file when running in your project.
@@ -114,9 +103,6 @@ The agents will automatically read this file when running in your project.
 ## Usage
 
 ```bash
-# initialize a project context file
-crawlix init
-
 # run all agents against your app
 crawlix run --url https://myapp.com --goal "complete the signup flow"
 
