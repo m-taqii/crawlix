@@ -78,13 +78,15 @@ export async function listPersonas() {
 
   console.log('  built-in:')
   builtIns.forEach(p => {
-    console.log(`    ${p.name.padEnd(16)} ${p.description}`)
+    const cliName = p.name.toLowerCase().replace(/\s+/g, '-')
+    console.log(`    ${cliName.padEnd(16)} ${p.description}`)
   })
 
   if (customs.length > 0) {
     console.log('\n  custom:')
     customs.forEach(p => {
-      console.log(`    ${p.name.padEnd(16)} ${p.description}`)
+      const cliName = p.name.toLowerCase().replace(/\s+/g, '-')
+      console.log(`    ${cliName.padEnd(16)} ${p.description}`)
     })
   }
 
